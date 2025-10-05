@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>School Management System - Web Test</title>
+    <style>
+       /* ===== Reset & Fonts ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; }
+
+/* ===== Header ===== */
+header {
+    background: linear-gradient(90deg, #007BFF, #00c6ff);
+    color: white;
+    padding: 25px 20px;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* ===== Navigation Tabs ===== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    background: #007BFF;
+    padding: 10px;
+}
+nav button {
+    padding: 12px 25px;
+    margin: 5px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 600;
+    transition: 0.3s;
+    background: #0056b3;
+}
+nav button:hover { background: #ffc107; color: #333; }
+nav button.active { background: #ffc107; color: #333; }
+
+/* ===== Container Panels ===== */
+.container {
+    display: none;
+    background: white;
+    margin: 20px auto;
+    padding: 25px 30px;
+    border-radius: 15px;
+    max-width: 900px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+.container.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+@keyframes fadeIn { from {opacity:0; transform: translateY(20px);} to {opacity:1; transform: translateY(0);} }
+
+/* ===== Inputs & Buttons ===== */
+input, select, textarea {
+    padding: 12px;
+    margin: 10px 0;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: 0.3s;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0,123,255,0.3);
+}
+button {
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 25px;
+    border: none;
+    background: #007BFF;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button:hover { background: #0056b3; }
+
+/* ===== Sections ===== */
+h2 { color: #007BFF; margin-bottom: 15px; }
+h3 { color: #333; margin: 15px 0 10px; }
+pre {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    overflow-x: auto;
+    max-height: 250px;
+}
+
+/* ===== Cards for forms ===== */
+.container > div { margin-bottom: 20px; }
+
+/* ===== Responsive ===== */
+@media(max-width: 768px) {
+    nav { flex-direction: column; }
+    nav button { width: 90%; }
+}
+</style>
+    </style>
+</head>
+<body>
+    <header><h1>School Management System - Web App</h1></header>
+
+    <nav>
+    <button class="tab-btn active" data-target="admin">Admin</button>
+    <button class="tab-btn" data-target="teacher">Teacher</button>
+    <button class="tab-btn" data-target="student">Student</button>
+    <button class="tab-btn" data-target="parent">Parent</button>
+</nav>
+
+<!-- ================== ADMIN ================== -->
+<div class="container active" id="admin">
+    <h2>Admin Panel</h2>
+    <div>
+        <h3>Create User</h3>
+        <input type="text" id="admin_username" placeholder="Username">
+        <input type="text" id="admin_fullName" placeholder="Full Name">
+        <input type="email" id="admin_email" placeholder="Email">
+        <input type="password" id="admin_password" placeholder="Password">
+        <input type="text" id="admin_roles" placeholder="Roles (comma-separated)">
+        <button onclick="createUser()">Create User</button>
+        <pre id="admin_userResponse"></pre>
+    </div>
+
+    <div>
+        <h3>List Users</h3>
+        <button onclick="listUsers()">Get Users</button>
+        <pre id="admin_listResponse"></pre>
+    </div>
+
+    <div>
+        <h3>Create Class</h3>
+        <input type="text" id="className" placeholder="Class Name">
+        <button onclick="createClass()">Create Class</button>
+        <pre id="admin_classResponse"></pre>
+    </div>
+
+    <div>
+        <h3>Create Subject</h3>
+        <input type="text" id="subjectName" placeholder="Subject Name">
+        <button onclick="createSubject()">Create Subject</button>
+        <pre id="admin_subjectResponse"></pre>
+    </div>
+
+    <div>
+        <h3>Create Notice</h3>
+        <input type="text" id="noticeTitle" placeholder="Title">
+        <textarea id="noticeContent" placeholder="Content" rows="3"></textarea>
+        <button onclick="createNotice()">Create Notice</button>
+        <pre id="admin_noticeResponse"></pre>
+    </div>
+</div>
+
+<!-- ================== TEACHER ================== -->
+<div class="container" id="teacher">
+    <h2>Teacher Panel</h2>
+    <div>
+        <h3>Mark Attendance</h3>
+        <input type="number" id="attendance_studentId" placeholder="Student ID">
+        <input type="number" id="attendance_classId" placeholder="Class ID">
+        <input type="date" id="attendance_date">
+        <select id="attendance_present">
+            <option value="true">Present</option>
+            <option value="false">Absent</option>
+        </select>
+        <button onclick="markAttendance()">Mark Attendance</button>
+        <pre id="teacher_attendanceResponse"></pre>
+    </div>
+
+    <div>
+        <h3>Create Assignment</h3>
+        <input type="text" id="assignmentTitle" placeholder="Title">
+        <textarea id="assignmentDesc" placeholder="Description" rows="3"></textarea>
+        <input type="date" id="assignmentDue">
+        <input type="number" id="assignmentClassId" placeholder="Class ID">
+        <input type="number" id="assignmentSubjectId" placeholder="Subject ID">
+        <input type="number" id="assignmentTeacherId" placeholder="Teacher ID">
+        <button onclick="createAssignment()">Create Assignment</button>
+        <pre id="teacher_assignmentResponse"></pre>
+    </div>
+
+    <div>
+        <h3>Upload Marks</h3>
+        <input type="number" id="markStudentId" placeholder="Student ID">
+        <input type="number" id="markSubjectId" placeholder="Subject ID">
+        <input type="number" id="markScore" placeholder="Score">
+        <button onclick="uploadMark()">Upload Mark</button>
+        <pre id="teacher_markResponse"></pre>
+    </div>
+</div>
+
+<!-- ================== STUDENT ================== -->
+<div class="container" id="student">
+    <h2>Student Panel</h2>
+    <div>
+        <h3>View Attendance</h3>
+        <input type="number" id="studentId_attendance" placeholder="Your Student ID">
+        <button onclick="getAttendance()">Get Attendance</button>
+        <pre id="student_attendanceResponse"></pre>
+    </div>
+
+    <div>
+        <h3>View Marks</h3>
+        <input type="number" id="studentId_marks" placeholder="Your Student ID">
+        <button onclick="getMarks()">Get Marks</button>
+        <pre id="student_marksResponse"></pre>
+    </div>
+</div>
+
+<!-- ================== PARENT ================== -->
+<div class="container" id="parent">
+    <h2>Parent Panel</h2>
+    <div>
+        <h3>View Child Marks</h3>
+        <input type="number" id="parentChildId_marks" placeholder="Child Student ID">
+        <button onclick="getChildMarks()">Get Marks</button>
+        <pre id="parent_marksResponse"></pre>
+    </div>
+
+    <div>
+        <h3>Pay Fees</h3>
+        <input type="number" id="parentChildId_pay" placeholder="Child Student ID">
+        <input type="number" id="feeAmount" placeholder="Amount">
+        <input type="text" id="feeRef" placeholder="Payment Reference">
+        <button onclick="payFees()">Pay Fees</button>
+        <pre id="parent_feeResponse"></pre>
+    </div>
+</div>
+
+    <script>
+        const API_ADMIN = "http://localhost:8080/api/admin";
+        const API_TEACHER = "http://localhost:8080/api/teacher";
+        const API_STUDENT = "http://localhost:8080/api/student";
+        const API_PARENT = "http://localhost:8080/api/parent";
+
+        // ===== Tabs =====
+        const tabs = document.querySelectorAll(".tab-btn");
+        const containers = document.querySelectorAll(".container");
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                tabs.forEach(t => t.classList.remove("active"));
+                containers.forEach(c => c.classList.remove("active"));
+                tab.classList.add("active");
+                document.getElementById(tab.dataset.target).classList.add("active");
+            });
+        });
+
+        // ===== ADMIN FUNCTIONS =====
+        async function createUser() {
+            const data = {
+                username: document.getElementById('admin_username').value,
+                fullName: document.getElementById('admin_fullName').value,
+                email: document.getElementById('admin_email').value,
+                password: document.getElementById('admin_password').value,
+                roles: document.getElementById('admin_roles').value.split(',').map(r => r.trim())
+            };
+            const res = await fetch(`${API_ADMIN}/users`, {
+                method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)
+            });
+            document.getElementById('admin_userResponse').textContent = JSON.stringify(await res.json(), null, 2);
+        }
+
+        async function listUsers() {
+            const res = await fetch(`${API_ADMIN}/users`);
+            document.getElementById('admin_listResponse').textContent = JSON.stringify(await res.json(), null, 2);
+        }
+
+        async function createClass() {
+            const data = {name: document.getElementById('className').value};
+            const res = await fetch(`${API_ADMIN}/classrooms`, {
+                method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)
+            });
+            document.getElementById('admin_classResponse').textContent = JSON.stringify(await res.json(), null, 2);
+        }
+
+        async function createSubject() {
+            const data = {name: document.getElementById('subjectName').value};
+            const res = await fetch(`${API_ADMIN}/subjects`, {
+                method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)
+            });
+            document.getElementById('admin_subjectResponse').textContent = JSON.stringify(await res.json(), null, 2);
+        }
+
+        async function createNotice() {
+            const data = {title: document.getElementById('noticeTitle').value, content: document.getElementById('noticeContent').value};
+            const res = await fetch(`${API_ADMIN}/notices`, {
+                method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)
+            });
+            document.getElementById('admin_noticeResponse').textContent = JSON.stringify(await res.json(), null, 2);
+        }
+
+        // ===== TEACHER FUNCTIONS =====
+		    async function markAttendance() {
+		    const data = {
+		        studentId: parseInt(document.getElementById('attendance_studentId').value),
+		        classRoomId: parseInt(document.getElementById('attendance_classId').value),
+		        date: document.getElementById('attendance_date').value, // send the date
+		        present: document.getElementById('attendance_present').value === "true"
+		    };
+		    const res = await fetch(`${API_TEACHER}/attendance`, {
+		        method: "POST",
+		        headers: {"Content-Type": "application/json"},
+		        body: JSON.stringify(data)
+		    });
+		    document.getElementById('teacher_attendanceResponse').textContent = JSON.stringify(await res.json(), null, 2);
+		}
+
+        async function createAssignment() {
+            const data = {
+                title: document.getElementById('assignmentTitle').value,
+                description: document.getElementById('assignmentDesc').value,
+                dueDate: document.getElementById('assignmentDue').value,
+                classRoomId: parseInt(document.getElementById('assignmentClassId').value),
+                subjectId: parseInt(document.getElementById('assignmentSubjectId').value),
+                teacherId: parseInt(document.getElementById('assignmentTeacherId').value)
+            };
+            const res = await fetch(`${API_TEACHER}/assignments`, {
+                method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)
+            });
+            document.getElementById('teacher_assignmentResponse').textContent = JSON.stringify(await res.json(), null, 2);
+        }
+
+        async function uploadMark() {
+            const data = {
+                studentId: parseInt(document.getElementById('markStudentId').value),
+                subjectId: parseInt(document.getElementById('markSubjectId').value),
+                score: parseFloat(document.getElementById('markScore').value)
+            };
+            const res = await fetch(`${API_TEACHER}/marks`, {
+                method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)
+            });
+            document.getElementById('teacher_markResponse').textContent = JSON.stringify(await res.json(), null, 2);
+        }
+
+        // ===== STUDENT FUNCTIONS =====
+        async function getAttendance() {
+            const studentId = document.getElementById('studentId_attendance').value;
+            const res = await fetch(`${API_STUDENT}/attendance/${studentId}`);
+            document.getElementById('student_attendanceResponse').textContent = JSON.stringify(await res.json(), null, 2);
+        }
+
+        async function getMarks() {
+            const studentId = document.getElementById('studentId_marks').value;
+            const res = await fetch(`${API_STUDENT}/marks/${studentId}`);
+            document.getElementById('student_marksResponse').textContent = JSON.stringify(await res.json(), null, 2);
+        }
+
+        // ===== PARENT FUNCTIONS =====
+        async function getChildMarks() {
+            const studentId = document.getElementById('parentChildId_marks').value;
+            const res = await fetch(`${API_PARENT}/child/${studentId}/marks`);
+            document.getElementById('parent_marksResponse').textContent = JSON.stringify(await res.json(), null, 2);
+        }
+
+        async function payFees() {
+            const studentId = document.getElementById('parentChildId_pay').value;
+            const data = {
+                amount: parseFloat(document.getElementById('feeAmount').value),
+                paymentReference: document.getElementById('feeRef').value
+            };
+            const res = await fetch(`${API_PARENT}/child/${studentId}/pay`, {
+                method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)
+            });
+            document.getElementById('parent_feeResponse').textContent = JSON.stringify(await res.json(), null, 2);
+        }
+    </script>
+</body>
+</html>
